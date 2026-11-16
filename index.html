@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>AI导航站 — 免费 API 与免费工具</title>
+    <meta name="description" content="主打免费的 AI 导航：免费 API、免费对话、生图、编程与办公工具，标注免费方式与国内是否直连。" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <style>
+      button, [role="button"], select, summary, input:not([type="checkbox"], [type="radio"]) { min-height: 2.25rem; }
+      * { box-sizing: border-box; }
+      :root{
+        --bg:#f2f4f1;
+        --bg-soft:#e9ede8;
+        --surface:#ffffff;
+        --surface-2:#f7f8f6;
+        --ink:#131c18;
+        --ink-2:#44524b;
+        --ink-3:#718078;
+        --line:#dde3dd;
+        --teal:#0c6b57;
+        --teal-deep:#0a4f40;
+        --teal-soft:#e0efe9;
+        --amber:#b97d0a;
+        --amber-soft:#fbf0d3;
+        --amber-ink:#7a5203;
+        --rose-soft:#fdecec;
+        --rose-ink:#9c2b2b;
+        --shadow:0 1px 2px rgba(19,28,24,.05),0 10px 30px -18px rgba(19,28,24,.25);
+        --radius:16px;
+      }
+      @media (prefers-color-scheme: dark){
+        :root{
+          --bg:#0e1512;
+          --bg-soft:#131d18;
+          --surface:#18221d;
+          --surface-2:#1d2922;
+          --ink:#eef3ef;
+          --ink-2:#b9c6bd;
+          --ink-3:#8a9a8f;
+          --line:#2a3830;
+          --teal:#3ec9a7;
+          --teal-deep:#0f2d25;
+          --teal-soft:#17362c;
+          --amber:#e9b44c;
+          --amber-soft:#3a2f14;
+          --amber-ink:#f2cd7e;
+          --rose-soft:#3d1f1f;
+          --rose-ink:#f0a3a3;
+          --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 32px -18px rgba(0,0,0,.6);
+        }
+      }
+      html{ scroll-behavior:smooth; }
+      body{
+        margin:0; background:var(--bg); color:var(--ink);
+        font-family:"Noto Sans SC", system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        -webkit-font-smoothing:antialiased; line-height:1.55;
+      }
+      .num{ font-family:"Manrope","Noto Sans SC",sans-serif; }
+      a{ color:inherit; }
+      .wrap{ max-width:1180px; margin:0 auto; padding:0 20px 64px; }
+
+      /* ---------- Hero ---------- */
+      .hero{ padding:44px 0 8px; }
+      .hero-top{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:18px; }
+      .pill{
+        display:inline-flex; align-items:center; gap:7px; min-height:32px;
+        padding:5px 12px; border-radius:999px; font-size:13px; font-weight:700;
+        background:var(--teal-soft); color:var(--teal); border:1px solid transparent;
+      }
+      .pill.amber{ background:var(--amber-soft); color:var(--amber-ink); }
+      .pill svg{ width:15px; height:15px; flex:none; }
+      h1{
+        margin:0; font-size:clamp(32px,5.4vw,54px); line-height:1.12; font-weight:900; letter-spacing:-.01em;
+        max-width:16em;
+      }
+      h1 .hl{ color:var(--teal); box-shadow:inset 0 -0.32em 0 var(--teal-soft); }
+      .hero-sub{ margin:16px 0 0; font-size:16.5px; color:var(--ink-2); max-width:44em; }
+      .hero-sub strong{ color:var(--ink); }
+
+      .searchbar{
+        margin-top:26px; display:flex; gap:10px; flex-wrap:wrap;
+      }
+      .searchbox{
+        flex:1 1 320px; display:flex; align-items:center; gap:10px;
+        background:var(--surface); border:1.5px solid var(--line); border-radius:14px;
+        padding:6px 8px 6px 16px; box-shadow:var(--shadow);
+      }
+      .searchbox:focus-within{ border-color:var(--teal); }
+      .searchbox svg{ width:20px; height:20px; color:var(--ink-3); flex:none; }
+      .searchbox input{
+        flex:1; min-width:0; border:0; outline:0; background:transparent; color:var(--ink);
+        font:inherit; font-size:16px; height:44px;
+      }
+      .searchbox input::placeholder{ color:var(--ink-3); }
+      .search-go{
+        flex:none; border:0; cursor:pointer; border-radius:10px; padding:0 20px; height:44px;
+        background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:15px;
+      }
+      @media (prefers-color-scheme: dark){ .search-go{ color:#06231b; } }
+      .quick{ margin-top:14px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; font-size:13.5px; color:var(--ink-3); }
+      .quick button{
+        border:1px solid var(--line); background:var(--surface); color:var(--ink-2);
+        border-radius:999px; padding:6px 13px; font:inherit; font-size:13.5px; font-weight:500; cursor:pointer; min-height:36px;
+      }
+      .quick button:hover{ border-color:var(--teal); color:var(--teal); }
+
+      .stats{ margin-top:28px; display:flex; flex-wrap:wrap; gap:0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+      .stat{ padding:16px 26px 16px 0; margin-right:26px; }
+      .stat:last-child{ margin-right:0; }
+      .stat b{ display:block; font-size:26px; font-weight:800; line-height:1.1; }
+      .stat span{ font-size:13px; color:var(--ink-3); }
+
+      /* ---------- Shop ---------- */
+      .shop{
+        margin-top:30px; background:var(--teal-deep); color:#eafaf3; border-radius:20px;
+        padding:26px; display:grid; grid-template-columns:1.05fr 1.6fr; gap:26px; position:relative; overflow:hidden;
+      }
+      @media (prefers-color-scheme: dark){ .shop{ background:#123b30; } }
+      .shop::after{
+        content:""; position:absolute; right:-70px; top:-70px; width:230px; height:230px; border-radius:50%;
+        border:34px solid rgba(255,255,255,.06); pointer-events:none;
+      }
+      .shop-left h2{ margin:0 0 6px; font-size:24px; font-weight:900; display:flex; align-items:center; gap:10px; }
+      .shop-left h2 svg{ width:24px; height:24px; }
+      .shop-name{ font-size:14px; opacity:.85; margin:0 0 10px; }
+      .shop-desc{ margin:0; font-size:14.5px; line-height:1.65; opacity:.92; max-width:26em; }
+      .shop-cta{
+        display:inline-flex; align-items:center; gap:8px; margin-top:18px; min-height:46px;
+        background:#fff; color:#0a4f40; text-decoration:none; font-weight:800; font-size:15px;
+        padding:10px 20px; border-radius:12px;
+      }
+      .shop-cta svg{ width:17px; height:17px; }
+      .shop-items{ display:grid; grid-template-columns:1fr 1fr; gap:14px; align-content:center; position:relative; z-index:1; }
+      .shop-item{
+        background:rgba(255,255,255,.97); color:#14201b; border-radius:14px; padding:18px;
+        display:flex; flex-direction:column; gap:6px; text-decoration:none;
+      }
+      .shop-item .tag{ align-self:flex-start; font-size:12px; font-weight:800; letter-spacing:.04em; background:#e0efe9; color:#0c6b57; padding:3px 9px; border-radius:6px; }
+      .shop-item h3{ margin:2px 0 0; font-size:16.5px; font-weight:800; line-height:1.4; }
+      .shop-item p{ margin:0; font-size:13px; color:#5a6a61; }
+      .shop-item .price{ margin-top:auto; padding-top:8px; display:flex; align-items:baseline; gap:6px; }
+      .shop-item .price b{ font-size:26px; font-weight:800; color:#0c6b57; }
+      .shop-item .price span{ font-size:13px; color:#718078; }
+      .shop-item .go{ font-size:13.5px; font-weight:700; color:#0c6b57; display:inline-flex; gap:5px; align-items:center; }
+      .shop-item .go svg{ width:14px; height:14px; }
+
+      /* ---------- Filters ---------- */
+      .filters{ margin-top:38px; }
+      .filters-row{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+      .cat-btn{
+        border:1.5px solid var(--line); background:var(--surface); color:var(--ink-2);
+        border-radius:999px; padding:8px 18px; font:inherit; font-size:14.5px; font-weight:700; cursor:pointer; min-height:42px;
+      }
+      .cat-btn:hover{ border-color:var(--teal); color:var(--teal); }
+      .cat-btn.on{ background:var(--teal); border-color:var(--teal); color:#fff; }
+      @media (prefers-color-scheme: dark){ .cat-btn.on{ color:#06231b; } }
+      .cat-btn .cnt{ font-size:12px; opacity:.75; font-weight:700; margin-left:4px; }
+      .net-select{
+        margin-left:auto; display:flex; align-items:center; gap:8px; font-size:13.5px; color:var(--ink-3);
+      }
+      .net-select select{
+        font:inherit; font-size:14px; font-weight:600; color:var(--ink);
+        background:var(--surface); border:1.5px solid var(--line); border-radius:10px; padding:8px 12px; min-height:42px; cursor:pointer;
+      }
+      .result-line{ margin:16px 2px 0; font-size:13.5px; color:var(--ink-3); }
+      .result-line b{ color:var(--ink); }
+
+      /* ---------- Grid ---------- */
+      .grid{ margin-top:16px; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+      .card{
+        background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+        padding:20px; display:flex; flex-direction:column; gap:10px; box-shadow:var(--shadow);
+        text-decoration:none; transition:border-color .15s ease, transform .15s ease;
+      }
+      .card:hover{ border-color:var(--teal); transform:translateY(-2px); }
+      .card-head{ display:flex; gap:13px; align-items:flex-start; }
+      .mono{
+        flex:none; width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+        font-family:"Manrope",sans-serif; font-weight:800; font-size:19px; color:#fff;
+      }
+      .card-head h3{ margin:1px 0 2px; font-size:17px; font-weight:800; line-height:1.3; }
+      .card-head .domain{ font-size:12.5px; color:var(--ink-3); word-break:break-all; }
+      .badge-free{
+        margin-left:auto; flex:none; font-size:12px; font-weight:800; padding:4px 9px; border-radius:7px;
+        background:var(--amber-soft); color:var(--amber-ink); white-space:nowrap;
+      }
+      .card p.desc{ margin:0; font-size:14px; color:var(--ink-2); line-height:1.65; flex:1; }
+      .card .note{
+        margin:0; font-size:13px; color:var(--ink); background:var(--surface-2); border:1px dashed var(--line);
+        border-radius:9px; padding:8px 11px; line-height:1.55;
+      }
+      .card .note b{ color:var(--teal); }
+      .card-foot{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:2px; }
+      .chip{ font-size:12px; font-weight:600; padding:4px 9px; border-radius:999px; background:var(--bg-soft); color:var(--ink-2); }
+      .chip.net-ok{ background:var(--teal-soft); color:var(--teal); }
+      .chip.net-magic{ background:var(--rose-soft); color:var(--rose-ink); }
+      .card .visit{ margin-left:auto; font-size:13.5px; font-weight:800; color:var(--teal); display:inline-flex; align-items:center; gap:5px; }
+      .card .visit svg{ width:14px; height:14px; }
+      .empty{
+        display:none; margin-top:16px; background:var(--surface); border:1px dashed var(--line); border-radius:var(--radius);
+        padding:44px 24px; text-align:center; color:var(--ink-2);
+      }
+      .empty h3{ margin:0 0 6px; color:var(--ink); font-size:17px; }
+      .empty p{ margin:0; font-size:14px; }
+      .empty button{
+        margin-top:16px; border:0; cursor:pointer; background:var(--teal); color:#fff; font:inherit; font-weight:700;
+        border-radius:10px; padding:10px 20px; min-height:44px;
+      }
+      @media (prefers-color-scheme: dark){ .empty button{ color:#06231b; } }
+
+      /* ---------- Guide ---------- */
+      .guide{ margin-top:52px; }
+      .guide h2, .faq h2{ margin:0 0 6px; font-size:24px; font-weight:900; }
+      .guide .sub, .faq .sub{ margin:0 0 20px; color:var(--ink-2); font-size:14.5px; }
+      .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+      .step{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow); }
+      .step .no{
+        width:34px; height:34px; border-radius:10px; background:var(--teal-soft); color:var(--teal);
+        display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; margin-bottom:12px;
+      }
+      .step h3{ margin:0 0 6px; font-size:16.5px; font-weight:800; }
+      .step p{ margin:0; font-size:14px; color:var(--ink-2); line-height:1.65; }
+      .step p a{ color:var(--teal); font-weight:700; text-decoration:none; border-bottom:1px solid var(--teal-soft); }
+
+      .faq{ margin-top:52px; }
+      .faq details{
+        background:var(--surface); border:1px solid var(--line); border-radius:12px; margin-bottom:10px; overflow:hidden;
+      }
+      .faq summary{
+        cursor:pointer; padding:16px 20px; font-weight:700; font-size:15.5px; list-style:none;
+        display:flex; align-items:center; gap:10px; min-height:52px;
+      }
+      .faq summary::-webkit-details-marker{ display:none; }
+      .faq summary::after{ content:"+"; margin-left:auto; font-size:20px; color:var(--teal); font-weight:800; }
+      .faq details[open ] summary::after{ content:"–"; }
+      .faq .a{ padding:0 20px 18px; font-size:14.5px; color:var(--ink-2); line-height:1.7; }
+      .faq .a a{ color:var(--teal); font-weight:700; }
+
+      footer{
+        margin-top:56px; border-top:1px solid var(--line); padding-top:22px;
+        display:flex; flex-wrap:wrap; gap:10px 26px; font-size:13px; color:var(--ink-3); line-height:1.7;
+      }
+      footer a{ color:var(--teal); font-weight:700; text-decoration:none; }
+
+      @media (max-width: 960px){
+        .grid{ grid-template-columns:repeat(2,1fr); }
+        .shop{ grid-template-columns:1fr; }
+        .steps{ grid-template-columns:1fr; }
+      }
+      @media (max-width: 620px){
+        .wrap{ padding:0 14px 48px; }
+        .hero{ padding-top:30px; }
+        .grid{ grid-template-columns:1fr; }
+        .shop{ padding:20px; }
+        .shop-items{ grid-template-columns:1fr; }
+        .net-select{ margin-left:0; width:100%; }
+        .net-select select{ flex:1; }
+        .stat{ padding:14px 18px 14px 0; margin-right:18px; }
+        .stat b{ font-size:22px; }
+      }
+      @media (prefers-reduced-motion: reduce){
+        html{ scroll-behavior:auto; }
+        .card{ transition:none; }
+        .card:hover{ transform:none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <!-- Hero -->
+      <section class="hero">
+        <div class="hero-top">
+          <span class="pill">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4.5 13.5H11L9.5 22 19 10h-6.5L13 2z"/></svg>
+            主打免费 · 先免费用起来
+          </span>
+          <span class="pill amber">免费 API 是本站重点</span>
+        </div>
+        <h1>能白嫖的 AI，<br />就别急着<span class="hl">花钱</span>。</h1>
+        <p class="hero-sub">这里只收一件事：<strong>免费能用的 AI</strong>。免费 API 领 Key 自己调、免费工具打开网页就能用——每个都标清了<strong>怎么个免费法</strong>和<strong>国内能不能直连</strong>，不用你一个个去试。</p>
+
+        <form class="searchbar" id="searchForm" role="search">
+          <label class="searchbox">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
+            <input id="searchInput" type="search" placeholder="搜名字或用途：生图、写代码、长文、Gemini…" autocomplete="off" aria-label="搜索站点" />
+          </label>
+          <button class="search-go" type="submit">搜索</button>
+        </form>
+        <div class="quick">
+          <span>热门：</span>
+          <button type="button" data-q="生图">免费生图</button>
+          <button type="button" data-q="API">免费 API</button>
+          <button type="button" data-q="代码">写代码</button>
+          <button type="button" data-q="长文">读长文</button>
+          <button type="button" data-q="PPT">做 PPT</button>
+        </div>
+
+        <div class="stats" aria-label="收录概况">
+          <div class="stat"><b class="num" id="statTotal">–</b><span>个免费资源</span></div>
+          <div class="stat"><b class="num" id="statApi">–</b><span>个免费 API 平台</span></div>
+          <div class="stat"><b class="num" id="statDirect">–</b><span>个国内可直连</span></div>
+          <div class="stat"><b class="num">¥0</b><span>起步成本</span></div>
+        </div>
+      </section>
+
+      <!-- Shop -->
+      <section class="shop" id="shop" aria-label="AI 订阅代充小店">
+        <div class="shop-left">
+          <h2>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16l-1.2 12.2a1.8 1.8 0 0 1-1.8 1.6H7a1.8 1.8 0 0 1-1.8-1.6L4 7z"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/></svg>
+            免费不够用？看小店
+          </h2>
+          <p class="shop-name">小店「ai代理」 · 16688 平台</p>
+          <p class="shop-desc">AI 订阅代充小店。免费额度适合尝鲜和轻度使用；真要长期高频用，付费版的额度和稳定性还是不一样——店里就两件主营，明码标价。</p>
+          <a class="shop-cta" href="https://www.16688.com.cn/shop/S574155" target="_blank" rel="noopener">
+            进店看看
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>
+          </a>
+        </div>
+        <div class="shop-items">
+          <a class="shop-item" href="https://www.16688.com.cn/shop/S574155" target="_blank" rel="noopener">
+            <span class="tag">CLAUDE</span>
+            <h3>Muse 邀请助力拉满</h3>
+            <p>邀请助力类服务，详情以商品页为准</p>
+            <div class="price"><b class="num">¥15</b><span>/ 件</span></div>
+            <span class="go">去购买 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
+          </a>
+          <a class="shop-item" href="https://www.16688.com.cn/shop/S574155" target="_blank" rel="noopener">
+            <span class="tag">GPT · CODEX</span>
+            <h3>GPT Codex Plus 充值套餐</h3>
+            <p>官方直充 · 质保 30 天</p>
+            <div class="price"><b class="num">¥120</b><span>/ 套餐</span></div>
+            <span class="go">去购买 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Filters -->
+      <section class="filters" aria-label="筛选">
+        <div class="filters-row" id="catRow" role="group" aria-label="按分类筛选"></div>
+        <div class="filters-row" style="margin-top:10px;">
+          <div class="net-select">
+            <label for="netSelect">网络环境</label>
+            <select id="netSelect">
+              <option value="all">全部</option>
+              <option value="direct">只看国内直连</option>
+              <option value="magic">只看需海外网络</option>
+            </select>
+          </div>
+        </div>
+        <p class="result-line" id="resultLine" aria-live="polite"></p>
+      </section>
+
+      <!-- Grid -->
+      <main>
+        <div class="grid" id="grid"></div>
+        <div class="empty" id="empty">
+          <h3>没找到匹配的</h3>
+          <p>换个关键词试试，或者清掉筛选看全部。</p>
+          <button type="button" id="resetBtn">清除筛选</button>
+        </div>
+      </main>
+
+      <!-- Guide -->
+      <section class="guide">
+        <h2>新手三步，先免费用起来</h2>
+        <p class="sub">不用一上来就买订阅。按这个顺序，零成本就能把 AI 用顺手。</p>
+        <div class="steps">
+          <div class="step">
+            <div class="no num">1</div>
+            <h3>先用免费对话工具</h3>
+            <p>日常问答、写作、改文案，直接用 <a href="https://chat.deepseek.com" target="_blank" rel="noopener">DeepSeek</a>、<a href="https://www.doubao.com" target="_blank" rel="noopener">豆包</a>、<a href="https://kimi.moonshot.cn" target="_blank" rel="noopener">Kimi</a>，打开网页就能聊，国内直连、完全免费。</p>
+          </div>
+          <div class="step">
+            <div class="no num">2</div>
+            <h3>再领免费 API</h3>
+            <p>想把 AI 接进自己的脚本、软件或工作流，就去领免费 Key：最省事的是 <a href="https://pollinations.ai" target="_blank" rel="noopener">Pollinations</a>（免 Key 免注册），模型最全的是 <a href="https://build.nvidia.com" target="_blank" rel="noopener">NVIDIA NIM</a>，国内直连选魔搭和硅基流动。</p>
+          </div>
+          <div class="step">
+            <div class="no num">3</div>
+            <h3>不够用再考虑付费</h3>
+            <p>免费额度有上限，高频、商用、要稳定性的场景再上付费版。需要代充可以看上面的<a href="#shop">小店「ai代理」</a>，先比价、先小额，别一上来买年付。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="faq">
+        <h2>关于「免费」，先说清三件事</h2>
+        <p class="sub">免得你兴冲冲注册完，才发现和想的不一样。</p>
+        <details>
+          <summary>「完全免费」「免费额度」「部分免费」有什么区别？</summary>
+          <div class="a">完全免费 = 核心功能长期免费用，比如 DeepSeek、豆包的对话。免费额度 = 给你一笔免费量（次数、魔粒、Token），用完要付费，比如魔搭、英伟达 NIM。部分免费 = 平台里一部分模型/功能免费，其余收费，比如硅基流动、OpenRouter——挑带免费标记的用就行。</div>
+        </details>
+        <details>
+          <summary>为什么有的标「需海外网络」？</summary>
+          <div class="a">本站读者很多在国内。标「国内直连」的在国内网络打开就能用；标「需海外网络」的（如 ChatGPT、Google AI Studio、Groq）在国内直连打不开，需要海外网络环境，自己提前确认好再注册，省得卡在第一步。</div>
+        </details>
+        <details>
+          <summary>免费 API 的 Key 能商用吗？</summary>
+          <div class="a">多数不能，或者有限制。比如 NVIDIA NIM 的免费 Key 仅限开发测试，调用内容会被留存，别拿它处理隐私数据；Pollinations 匿名调用也有频率限制。各家的条款以官网为准，真要商用先看清规则，或者直接上付费档。</div>
+        </details>
+        <details>
+          <summary>免费政策会变吗？</summary>
+          <div class="a">会，而且变得很快——额度缩水、免费档下线都发生过。本站信息核对至 2026 年 11 月 16 日，具体额度和规则点进官网看最新说明；某个平台政策大变，也欢迎回来对照本站标注。</div>
+        </details>
+      </section>
+
+      <footer>
+        <span>AI导航站 · 主打免费 API 与免费工具</span>
+        <span>小店：<a href="https://www.16688.com.cn/shop/S574155" target="_blank" rel="noopener">「ai代理」@16688</a></span>
+        <span>收录信息核对至 2026-11-16，免费额度与政策以各官网最新说明为准。</span>
+      </footer>
+    </div>
+
+    <script>
+      var SITES = [
+        /* ---------- 免费 API ---------- */
+        { name:"Pollinations", domain:"pollinations.ai", url:"https://pollinations.ai", cat:"api", free:"完全免费", net:"magic",
+          desc:"最省事的免费 API：免 Key、免注册，匿名就能调用文本和生图，接进软件或脚本复制个地址就行。",
+          note:"<b>限额：</b>生图至少间隔 45 秒、文本至少间隔 30 秒，超限会报错；领免费 Key 可去掉按 IP 限额、解锁全部模型、生图去 logo。",
+          tags:["生图","文本","免注册"], color:"#0c6b57", mono:"Po" },
+        { name:"NVIDIA NIM", domain:"build.nvidia.com", url:"https://build.nvidia.com", cat:"api", free:"免费额度", net:"magic",
+          desc:"英伟达官方推理平台，模型阵容最全之一，免费注册领 Key 就能调，兼容 OpenAI 格式，老工具改个地址就能接。",
+          note:"<b>额度：</b>约 82 个模型、约 40 次/分钟；需手机号验证，仅限开发测试，调用内容会被留存，别传隐私数据。",
+          tags:["大模型","OpenAI兼容"], color:"#4a7c0f", mono:"NV" },
+        { name:"魔搭 ModelScope", domain:"modelscope.cn", url:"https://www.modelscope.cn", cat:"api", free:"免费额度", net:"direct",
+          desc:"阿里达摩院的模型社区，Qwen 等国产新模型经常在这里首发，国内直连、注册就能领免费调用量。",
+          note:"<b>现行规则：</b>已改「魔粒」计量——每天登录领 200、绑阿里云再加 50，上限 250 魔粒/天，24 小时过期不结转；旗舰模型约 2 魔粒/次。",
+          tags:["Qwen","国产模型","首发"], color:"#7c4a03", mono:"魔" },
+        { name:"硅基流动 SiliconFlow", domain:"siliconflow.cn", url:"https://siliconflow.cn", cat:"api", free:"部分免费", net:"direct",
+          desc:"国产推理云平台，聚合了多款主流开源模型，速度快、国内直连，站内有专门的免费模型可直接调用。",
+          note:"<b>用法：</b>注册领 Key 后挑标了免费的模型用；其余模型按量付费，价格在国内平台里算低的。",
+          tags:["开源模型","国产"], color:"#1d5fae", mono:"硅" },
+        { name:"智谱 BigModel", domain:"bigmodel.cn", url:"https://open.bigmodel.cn", cat:"api", free:"免费额度", net:"direct",
+          desc:"GLM 系列模型的官方开放平台，中文理解和写作是强项，新用户注册有免费额度可领。",
+          note:"<b>适合：</b>中文对话、写作、知识问答类应用；额度用完后按 Token 计费，先小量测再放量。",
+          tags:["GLM","中文"], color:"#5b4bc4", mono:"智" },
+        { name:"阿里百炼", domain:"bailian.console.aliyun.com", url:"https://bailian.console.aliyun.com", cat:"api", free:"免费额度", net:"direct",
+          desc:"阿里云的大模型服务平台，通义系列模型的全家桶入口，新用户开通有免费额度，企业级稳定性。",
+          note:"<b>适合：</b>已经在用阿里云的人顺手接入；免费额度按模型分别发放，领的时候看清有效期。",
+          tags:["通义","阿里云"], color:"#c2510a", mono:"炼" },
+        { name:"Groq", domain:"console.groq.com", url:"https://console.groq.com", cat:"api", free:"免费额度", net:"magic",
+          desc:"以「快」出名的推理 API，自研芯片跑 Llama 等开源模型，回复速度明显快于多数平台，免费档领 Key 即用。",
+          note:"<b>适合：</b>对延迟敏感的实时对话、语音类应用；免费档有速率上限，高频商用要升付费。",
+          tags:["高速推理","Llama"], color:"#8a3324", mono:"Gq" },
+        { name:"Google AI Studio", domain:"aistudio.google.com", url:"https://aistudio.google.com", cat:"api", free:"免费额度", net:"magic",
+          desc:"Gemini API 的官方免费入口，领 Key 就能调 Gemini 系列，多模态（图、音频、长文）能力强。",
+          note:"<b>适合：</b>长文档、多模态和需要大上下文的场景；免费档数据可能用于改进产品，别传敏感内容。",
+          tags:["Gemini","多模态"], color:"#1d5fae", mono:"Ge" },
+        { name:"OpenRouter", domain:"openrouter.ai", url:"https://openrouter.ai", cat:"api", free:"部分免费", net:"magic",
+          desc:"一个 Key 聚合各家模型的「总台」，同一接口切换不同模型，站内带 :free 后缀的模型免费用。",
+          note:"<b>用法：</b>在模型列表里筛 free 标签；免费模型有每日调用上限，适合试不同模型的手感再决定买哪家。",
+          tags:["聚合","多模型"], color:"#374151", mono:"OR" },
+
+        /* ---------- 对话写作 ---------- */
+        { name:"DeepSeek", domain:"chat.deepseek.com", url:"https://chat.deepseek.com", cat:"chat", free:"完全免费", net:"direct",
+          desc:"国产对话工具，免费聊天不限量感强，推理和写代码都拿得出手，国内读者的默认起点之一。",
+          note:"<b>亮点：</b>深度思考模式免费可用；高峰时段偶尔排队，错峰用更顺。",
+          tags:["对话","推理","代码"], color:"#1d4ed8", mono:"DS" },
+        { name:"Kimi", domain:"kimi.moonshot.cn", url:"https://kimi.moonshot.cn", cat:"chat", free:"完全免费", net:"direct",
+          desc:"月之暗面的长文本专家，几十万字文档、论文、合同丢进去帮你读、帮你总结，学生和打工人友好。",
+          note:"<b>亮点：</b>读长文、扒网页、做摘要是它的主场；日常闲聊也能打。",
+          tags:["长文","读论文","总结"], color:"#111827", mono:"Ki" },
+        { name:"豆包", domain:"doubao.com", url:"https://www.doubao.com", cat:"chat", free:"完全免费", net:"direct",
+          desc:"字节跳动旗下 AI 助手，日常问答、写作、翻译、语音对话都顺手，手机端体验好，上手零门槛。",
+          note:"<b>亮点：</b>语音对话自然，适合练口语、随手问；写作模板多。",
+          tags:["对话","写作","语音"], color:"#0e7490", mono:"豆" },
+        { name:"通义", domain:"tongyi.aliyun.com", url:"https://tongyi.aliyun.com", cat:"chat", free:"完全免费", net:"direct",
+          desc:"阿里通义千问的对话入口，写作、编程、读文档均衡发挥，和阿里云生态打通。",
+          note:"<b>亮点：</b>文档解析和表格处理不错，办公场景顺手。",
+          tags:["对话","办公","文档"], color:"#6d28d9", mono:"通" },
+        { name:"ChatGPT", domain:"chatgpt.com", url:"https://chatgpt.com", cat:"chat", free:"免费档", net:"magic",
+          desc:"不用多介绍的那个。免费档能对话、能生图（有限额），综合能力仍是第一梯队。",
+          note:"<b>提醒：</b>免费档高峰期会降级到小模型、功能排队；重度使用还是付费版稳。",
+          tags:["对话","生图","多模态"], color:"#0f766e", mono:"G" },
+
+        /* ---------- 生图视频 ---------- */
+        { name:"即梦 AI", domain:"jimeng.jianying.com", url:"https://jimeng.jianying.com", cat:"image", free:"免费额度", net:"direct",
+          desc:"剪映旗下的生图 + 生视频工具，中文提示词理解好，每天有免费额度，做小红书配图够用了。",
+          note:"<b>适合：</b>中文语境的海报、插画、短视频素材；额度每天刷新，别囤。",
+          tags:["生图","视频","中文提示词"], color:"#be185d", mono:"即" },
+        { name:"可灵 AI", domain:"klingai.kuaishou.com", url:"https://klingai.kuaishou.com", cat:"image", free:"免费额度", net:"direct",
+          desc:"快手出品的视频生成，图生视频效果在国产里第一梯队，每天登录有免费额度领。",
+          note:"<b>适合：</b>把静态图变成动态短片；热门时段排队久，生成前先想好提示词别浪费额度。",
+          tags:["视频生成","图生视频"], color:"#7c2d12", mono:"可" },
+        { name:"LiblibAI", domain:"liblib.art", url:"https://www.liblib.art", cat:"image", free:"免费额度", net:"direct",
+          desc:"国内最大的 Stable Diffusion 模型社区之一，别人训好的模型和 LoRA 直接拿来生图，每天有免费算力。",
+          note:"<b>适合：</b>想要特定画风（国风、二次元、电商图）的人，先逛社区抄作业再上手。",
+          tags:["生图","模型社区","画风"], color:"#9d174d", mono:"Li" },
+
+        /* ---------- 编程开发 ---------- */
+        { name:"TRAE", domain:"trae.com.cn", url:"https://www.trae.com.cn", cat:"code", free:"完全免费", net:"direct",
+          desc:"字节出品的 AI 编程编辑器，国内版免费使用，对话式写代码、改 Bug，中文沟通无障碍。",
+          note:"<b>适合：</b>编程新手和独立开发者；老项目迁移前先备份再让它大改。",
+          tags:["AI编程","编辑器"], color:"#b45309", mono:"Tr" },
+        { name:"通义灵码", domain:"lingma.aliyun.com", url:"https://lingma.aliyun.com", cat:"code", free:"完全免费", net:"direct",
+          desc:"阿里的 AI 编程插件，装进 VS Code / JetBrains 就能代码补全、解释、生成单测，个人版免费。",
+          note:"<b>适合：</b>不想换编辑器的人，插件式接入、随时关，不绑架工作流。",
+          tags:["代码补全","插件"], color:"#065f46", mono:"灵" },
+        { name:"Hugging Face", domain:"huggingface.co", url:"https://huggingface.co", cat:"code", free:"部分免费", net:"magic",
+          desc:"全球最大的开源模型仓库，找模型、下数据集、在线试推理都在这，开发者绕不开的一站。",
+          note:"<b>用法：</b>Spaces 里有海量免费在线 Demo；Inference API 有免费额度，适合快速验证模型效果。",
+          tags:["模型库","数据集","Demo"], color:"#a16207", mono:"HF" },
+
+        /* ---------- 办公效率 ---------- */
+        { name:"Gamma", domain:"gamma.app", url:"https://gamma.app", cat:"office", free:"免费额度", net:"magic",
+          desc:"输入一句话大纲就生成整套 PPT/文档，排版自动搞定，免费注册送一笔积分够做几份完整的。",
+          note:"<b>适合：</b>临时要交的汇报、提案；免费版导出带水印，正式场合注意。",
+          tags:["PPT","汇报"], color:"#7e22ce", mono:"Ga" },
+        { name:"NotebookLM", domain:"notebooklm.google.com", url:"https://notebooklm.google.com", cat:"office", free:"完全免费", net:"magic",
+          desc:"谷歌的资料笔记 AI：把 PDF、网页、视频丢进去，它只基于你的资料回答，还能生成音频概览。",
+          note:"<b>亮点：</b>引用带出处、很少胡编，读文献和备考神器；回答只认你给的资料。",
+          tags:["读资料","笔记","备考"], color:"#1e40af", mono:"Nb" },
+        { name:"WPS AI", domain:"wps.cn", url:"https://www.wps.cn", cat:"office", free:"免费档", net:"direct",
+          desc:"装在 WPS 里的 AI，写周报、润色、做表格公式不用切出去，国内办公环境最顺手的接入方式。",
+          note:"<b>适合：</b>已经在用 WPS 的人；部分高级功能要会员，先用免费档摸清自己用不用得上。",
+          tags:["办公","文档","表格"], color:"#b91c1c", mono:"W" }
+      ];
+
+      var CATS = [
+        { id:"all", label:"全部" },
+        { id:"api", label:"免费 API" },
+        { id:"chat", label:"对话写作" },
+        { id:"image", label:"生图视频" },
+        { id:"code", label:"编程开发" },
+        { id:"office", label:"办公效率" }
+      ];
+      var CAT_LABEL = { api:"免费 API", chat:"对话写作", image:"生图视频", code:"编程开发", office:"办公效率" };
+
+      var state = { cat:"all", q:"", net:"all" };
+      var grid = document.getElementById("grid");
+      var empty = document.getElementById("empty");
+      var resultLine = document.getElementById("resultLine");
+      var searchInput = document.getElementById("searchInput");
+
+      function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+
+      function matches(s){
+        if (state.cat !== "all" && s.cat !== state.cat) return false;
+        if (state.net === "direct" && s.net !== "direct") return false;
+        if (state.net === "magic" && s.net !== "magic") return false;
+        if (state.q){
+          var hay = (s.name + " " + s.domain + " " + s.desc + " " + s.tags.join(" ") + " " + CAT_LABEL[s.cat]).toLowerCase();
+          if (hay.indexOf(state.q.toLowerCase()) === -1) return false;
+        }
+        return true;
+      }
+
+      function render(){
+        var list = SITES.filter(matches);
+        grid.innerHTML = list.map(function(s){
+          var netChip = s.net === "direct"
+            ? '<span class="chip net-ok">国内直连</span>'
+            : '<span class="chip net-magic">需海外网络</span>';
+          var tags = s.tags.map(function(t){ return '<span class="chip">' + esc(t) + "</span>"; }).join("");
+          return '<a class="card" href="' + s.url + '" target="_blank" rel="noopener">'
+            + '<div class="card-head"><div class="mono" style="background:' + s.color + '">' + esc(s.mono) + "</div>"
+            + '<div><h3>' + esc(s.name) + '</h3><div class="domain">' + esc(s.domain) + "</div></div>"
+            + '<span class="badge-free">' + esc(s.free) + "</span></div>"
+            + '<p class="desc">' + esc(s.desc) + "</p>"
+            + '<p class="note">' + s.note + "</p>"
+            + '<div class="card-foot">' + netChip + tags
+            + '<span class="visit">直达 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg></span></div></a>';
+        }).join("");
+        empty.style.display = list.length ? "none" : "block";
+        grid.style.display = list.length ? "" : "none";
+        var catName = state.cat === "all" ? "全部" : CAT_LABEL[state.cat];
+        resultLine.innerHTML = "当前：<b>" + catName + "</b> · 共 <b>" + list.length + "</b> 个站点"
+          + (state.q ? ' · 搜索「<b>' + esc(state.q) + "</b>\"" : "");
+      }
+
+      /* Category buttons */
+      var catRow = document.getElementById("catRow");
+      CATS.forEach(function(c){
+        var n = c.id === "all" ? SITES.length : SITES.filter(function(s){ return s.cat === c.id; }).length;
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "cat-btn" + (c.id === "all" ? " on" : "");
+        b.innerHTML = esc(c.label) + '<span class="cnt num">' + n + "</span>";
+        b.setAttribute("data-cat", c.id);
+        b.addEventListener("click", function(){
+          state.cat = c.id;
+          catRow.querySelectorAll(".cat-btn").forEach(function(x){ x.classList.toggle("on", x.getAttribute("data-cat") === c.id); });
+          render();
+        });
+        catRow.appendChild(b);
+      });
+
+      /* Search */
+      document.getElementById("searchForm").addEventListener("submit", function(e){ e.preventDefault(); state.q = searchInput.value.trim(); render(); });
+      searchInput.addEventListener("input", function(){ state.q = searchInput.value.trim(); render(); });
+      document.querySelectorAll(".quick button").forEach(function(b){
+        b.addEventListener("click", function(){
+          searchInput.value = b.getAttribute("data-q");
+          state.q = b.getAttribute("data-q");
+          render();
+          document.getElementById("grid").scrollIntoView({ behavior:"smooth", block:"start" });
+        });
+      });
+
+      /* Network filter */
+      document.getElementById("netSelect").addEventListener("change", function(e){ state.net = e.target.value; render(); });
+
+      /* Reset */
+      document.getElementById("resetBtn").addEventListener("click", function(){
+        state = { cat:"all", q:"", net:"all" };
+        searchInput.value = "";
+        document.getElementById("netSelect").value = "all";
+        catRow.querySelectorAll(".cat-btn").forEach(function(x){ x.classList.toggle("on", x.getAttribute("data-cat") === "all"); });
+        render();
+      });
+
+      /* Stats */
+      document.getElementById("statTotal").textContent = SITES.length;
+      document.getElementById("statApi").textContent = SITES.filter(function(s){ return s.cat === "api"; }).length;
+      document.getElementById("statDirect").textContent = SITES.filter(function(s){ return s.net === "direct"; }).length;
+
+      render();
+    </script>
+  </body>
+</html>
