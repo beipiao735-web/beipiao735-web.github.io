@@ -169,6 +169,13 @@
       }
       .result-line{ margin:16px 2px 0; font-size:13.5px; color:var(--ink-3); }
       .result-line b{ color:var(--ink); }
+      .cat-note{
+        display:none; margin-top:14px; background:var(--amber-soft); color:var(--amber-ink);
+        border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-size:13.5px; line-height:1.65;
+      }
+      .cat-note.show{ display:block; }
+      .cat-note b{ font-weight:800; }
+      .cat-note a{ color:inherit; font-weight:700; }
 
       /* ---------- Grid ---------- */
       .grid{ margin-top:16px; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
@@ -296,6 +303,7 @@
           <span>热门：</span>
           <button type="button" data-q="生图">免费生图</button>
           <button type="button" data-q="API">免费 API</button>
+          <button type="button" data-q="搜索">免费搜索 API</button>
           <button type="button" data-q="代码">写代码</button>
           <button type="button" data-q="长文">读长文</button>
           <button type="button" data-q="PPT">做 PPT</button>
@@ -355,6 +363,9 @@
           </div>
         </div>
         <p class="result-line" id="resultLine" aria-live="polite"></p>
+        <div class="cat-note" id="searchNote" role="note">
+          <b>关于本分类额度：</b>「免费搜索 API」分类的额度来自 <a href="https://linux.do/t/topic/3186113/1" target="_blank" rel="noopener">linux.do 社区帖</a>（2026-11-16），未逐家官方核实，以各官网为准。其中 Keenable、AnySearch、Serpex 三家的额度已与官方口径对上，其余请在注册前再到官网确认最新免费政策。
+        </div>
       </section>
 
       <!-- Grid -->
@@ -405,6 +416,10 @@
         <details>
           <summary>免费 API 的 Key 能商用吗？</summary>
           <div class="a">多数不能，或者有限制。比如 NVIDIA NIM 的免费 Key 仅限开发测试，调用内容会被留存，别拿它处理隐私数据；Pollinations 匿名调用也有频率限制。各家的条款以官网为准，真要商用先看清规则，或者直接上付费档。</div>
+        </details>
+        <details>
+          <summary>「免费搜索 API」分类的额度准吗？</summary>
+          <div class="a">本分类额度来自 linux.do 社区帖（2026-11-16），未逐家官方核实，以各官网为准。其中 Keenable、AnySearch、Serpex 三家已与官方口径对上；其余如 Linkup、Tavily、Exa 等的免费层经常调整，注册前请再到官网确认。分类里 DeepSeek 官方搜索是付费项（¥5/千次、无免费额度），Serper 与 Serpex 是一次性额度，用完不续杯，请注意区分。</div>
         </details>
         <details>
           <summary>免费政策会变吗？</summary>
@@ -458,6 +473,72 @@
           desc:"一个 Key 聚合各家模型的「总台」，同一接口切换不同模型，站内带 :free 后缀的模型免费用。",
           note:"<b>用法：</b>在模型列表里筛 free 标签；免费模型有每日调用上限，适合试不同模型的手感再决定买哪家。",
           tags:["聚合","多模型"], color:"#374151", mono:"OR" },
+
+        /* ---------- 免费搜索 API（额度来自 linux.do 社区帖 2026-11-16，未逐家官方核实） ---------- */
+        { name:"Keenable", domain:"keenable.ai", url:"https://keenable.ai", cat:"search", free:"免费额度", net:"magic",
+          desc:"免费搜索 API 里的主力选手，搜索质量在原帖里被列为第一档，给 Agent、RAG 和联网问答做搜索后端很合适。",
+          note:"<b>额度：</b>免费 10 万次/月/号（多号可叠加）；无 Key 也能调，1000 次/小时/IP。此家额度已与官方口径对上。",
+          tags:["联网搜索","搜索后端"], color:"#0c6b57", mono:"Ke" },
+        { name:"知乎开放平台", domain:"developer.zhihu.com", url:"https://developer.zhihu.com", cat:"search", free:"免费额度", net:"direct",
+          desc:"知乎官方开放平台，提供全网搜索和知乎站内搜索，中文新闻实时性强，查经验贴、测评和真实体验尤其好用。",
+          note:"<b>额度：</b>全网搜索、知乎搜索各 5000 次/天，两池独立计算，国内直连。",
+          tags:["中文搜索","知乎","新闻"], color:"#0066ff", mono:"知乎" },
+        { name:"AnySearch", domain:"anysearch.com", url:"https://anysearch.com", cat:"search", free:"免费额度", net:"magic",
+          desc:"主打英文搜索的 API，英文资料检索表现强，适合查英文文档、技术资料和海外信息。",
+          note:"<b>额度：</b>免费 1000 次/天/号。此家额度已与官方口径对上；提醒：中文小众题有误路由风险。",
+          tags:["英文搜索","联网搜索"], color:"#374151", mono:"An" },
+        { name:"Linkup", domain:"linkup.so", url:"https://linkup.so", cat:"search", free:"免费额度", net:"magic",
+          desc:"每月自动续杯型的搜索 API 免费层，不用盯着一次性额度，适合长期挂在 Agent 或工作流里当搜索后端。",
+          note:"<b>额度：</b>每月自动补满 $20 ≈ 4000 次标准搜索/号。",
+          tags:["联网搜索","每月续杯"], color:"#1d5fae", mono:"Li" },
+        { name:"Tavily", domain:"tavily.com", url:"https://tavily.com", cat:"search", free:"免费额度", net:"magic",
+          desc:"最常用的 AI 搜索后端之一，很多 Agent 框架和联网问答工具默认就接它，文档和生态成熟，上手快。",
+          note:"<b>额度：</b>免费 1000 次/月/号。",
+          tags:["联网搜索","Agent","RAG"], color:"#7c4a03", mono:"Ta" },
+        { name:"Exa", domain:"exa.ai", url:"https://exa.ai", cat:"search", free:"免费额度", net:"magic",
+          desc:"偏精检和抓取的搜索 API，语义搜索和整页内容抓取是强项，适合做深度研究、资料精查。",
+          note:"<b>额度：</b>每月送 $10 额度 ≈ 2500 次搜索或 1 万页抓取。",
+          tags:["语义搜索","网页抓取"], color:"#5b4bc4", mono:"Ex" },
+        { name:"百度千帆 AI 搜索", domain:"cloud.baidu.com", url:"https://cloud.baidu.com", cat:"search", free:"免费额度", net:"direct",
+          desc:"百度千帆平台的 AI 搜索能力，中文信源覆盖好，适合给国内应用做中文搜索补源。",
+          note:"<b>额度：</b>免费 100 次/天，国内直连。",
+          tags:["中文搜索","百度"], color:"#2932e1", mono:"千帆" },
+        { name:"火山豆包搜索", domain:"volcengine.com", url:"https://www.volcengine.com", cat:"search", free:"免费额度", net:"direct",
+          desc:"火山引擎（豆包生态）的搜索服务，原帖定位为找图专用，需要以图搜、配图检索的场景可以优先试它。",
+          note:"<b>额度：</b>免费 500 次/月，国内直连。",
+          tags:["找图","火山引擎"], color:"#c2510a", mono:"豆包" },
+        { name:"Brave Search API", domain:"brave.com/search/api", url:"https://brave.com/search/api/", cat:"search", free:"免费额度", net:"magic",
+          desc:"Brave 自有独立索引的搜索 API，不依赖谷歌/必应索引，适合当英文搜索的独立补充信源。",
+          note:"<b>额度：</b>每月送 $5 credit ≈ 1000 次搜索，需绑卡激活。",
+          tags:["英文搜索","独立索引"], color:"#8a3324", mono:"Br" },
+        { name:"You.com", domain:"you.com", url:"https://you.com", cat:"search", free:"免费额度", net:"magic",
+          desc:"提供无 Key 的 MCP 免费档，随用随取，不用先注册折腾 Key 就能给支持 MCP 的工具接上搜索。",
+          note:"<b>额度：</b>无 Key 的 MCP 免费档 100 次/天，长期有效。",
+          tags:["MCP","免Key","联网搜索"], color:"#0e7490", mono:"Yo" },
+        { name:"open-websearch", domain:"github.com/Aas-ee/open-webSearch", url:"https://github.com/Aas-ee/open-webSearch", cat:"search", free:"免费额度", net:"magic",
+          desc:"开源自建的网页搜索方案，自己部署、无需 Key，适合当 Web 发现的补充层，不想依赖商业 API 时用它兜底。",
+          note:"<b>额度：</b>完全免费、自建无 Key，会限流；需要自己部署和维护。",
+          tags:["开源","自建","免Key"], color:"#111827", mono:"OW" },
+        { name:"Serper", domain:"serper.dev", url:"https://serper.dev", cat:"search", free:"一次性额度", net:"magic",
+          desc:"主打谷歌搜索结果的 API，注册就送一笔一次性额度，适合短期项目、一次性调研先顶上。",
+          note:"<b>额度：</b>注册送 2500 次，一次性额度，用完就没有免费续杯了。",
+          tags:["谷歌搜索","一次性"], color:"#b45309", mono:"Se" },
+        { name:"Serpex", domain:"serpex.dev", url:"https://serpex.dev", cat:"search", free:"一次性额度", net:"magic",
+          desc:"备用型搜索 API，免费额度不大，胜在能当第二信源，主力额度用完或需要交叉验证时拿来补位。",
+          note:"<b>额度：</b>免费 200 credits，一次性。此家额度已与官方口径对上。",
+          tags:["备用","一次性"], color:"#065f46", mono:"Sx" },
+        { name:"Parallel", domain:"parallel.ai", url:"https://parallel.ai", cat:"search", free:"免费额度", net:"magic",
+          desc:"英文补充搜索 API，适合和 Tavily、Exa 等主力搭配，补齐英文信源覆盖。",
+          note:"<b>额度：</b>绑支付方式每月送 $5；原帖注：未核实到账，注册前请到官网再确认。",
+          tags:["英文搜索","补充信源"], color:"#7e22ce", mono:"Pa" },
+        { name:"元宝搜索（腾讯云 WSA）", domain:"cloud.tencent.com/product/wsa", url:"https://cloud.tencent.com/product/wsa", cat:"search", free:"免费额度", net:"direct",
+          desc:"腾讯云的网页搜索 API（WSA），腾讯生态信源是特色，原帖称独家可搜公众号内容，查中文和公众号资料有优势。",
+          note:"<b>额度：</b>每月 2000 次免费为限时活动（原帖称 2026-11-30 结束），平时 ¥14/千次起，国内直连。",
+          tags:["中文搜索","腾讯云","公众号"], color:"#1d4ed8", mono:"元宝" },
+        { name:"DeepSeek 官方搜索", domain:"platform.deepseek.com", url:"https://platform.deepseek.com", cat:"search", free:"付费", net:"direct",
+          desc:"DeepSeek 官方的搜索能力，没有免费额度，胜在官方直供、计费简单，免费额度用完后想稳定付费留用可以考虑。",
+          note:"<b>价格：</b>无免费额度，¥5/千次。这是付费项，不要当免费额度用，国内直连。",
+          tags:["付费","DeepSeek","中文搜索"], color:"#0f766e", mono:"DS" },
 
         /* ---------- 对话写作 ---------- */
         { name:"DeepSeek", domain:"chat.deepseek.com", url:"https://chat.deepseek.com", cat:"chat", free:"完全免费", net:"direct",
@@ -527,12 +608,13 @@
       var CATS = [
         { id:"all", label:"全部" },
         { id:"api", label:"免费 API" },
+        { id:"search", label:"免费搜索 API" },
         { id:"chat", label:"对话写作" },
         { id:"image", label:"生图视频" },
         { id:"code", label:"编程开发" },
         { id:"office", label:"办公效率" }
       ];
-      var CAT_LABEL = { api:"免费 API", chat:"对话写作", image:"生图视频", code:"编程开发", office:"办公效率" };
+      var CAT_LABEL = { api:"免费 API", search:"免费搜索 API", chat:"对话写作", image:"生图视频", code:"编程开发", office:"办公效率" };
 
       var state = { cat:"all", q:"", net:"all" };
       var grid = document.getElementById("grid");
@@ -571,6 +653,8 @@
         }).join("");
         empty.style.display = list.length ? "none" : "block";
         grid.style.display = list.length ? "" : "none";
+        var searchNote = document.getElementById("searchNote");
+        if (searchNote) searchNote.classList.toggle("show", state.cat === "search");
         var catName = state.cat === "all" ? "全部" : CAT_LABEL[state.cat];
         resultLine.innerHTML = "当前：<b>" + catName + "</b> · 共 <b>" + list.length + "</b> 个站点"
           + (state.q ? ' · 搜索「<b>' + esc(state.q) + "</b>\"" : "");
@@ -619,7 +703,7 @@
 
       /* Stats */
       document.getElementById("statTotal").textContent = SITES.length;
-      document.getElementById("statApi").textContent = SITES.filter(function(s){ return s.cat === "api"; }).length;
+      document.getElementById("statApi").textContent = SITES.filter(function(s){ return s.cat === "api" || s.cat === "search"; }).length;
       document.getElementById("statDirect").textContent = SITES.filter(function(s){ return s.net === "direct"; }).length;
 
       render();
